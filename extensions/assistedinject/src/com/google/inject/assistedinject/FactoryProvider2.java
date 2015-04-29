@@ -194,10 +194,10 @@ final class FactoryProvider2 <F> implements InvocationHandler,
 
   /** the factory interface, implemented and provided */
   private final F factory;
-  
+
   /** The key that this is bound to. */
   private final Key<F> factoryKey;
-  
+
   /** The binding collector, for equality/hashing purposes. */
   private final BindingCollector collector;
 
@@ -227,7 +227,7 @@ final class FactoryProvider2 <F> implements InvocationHandler,
       // TODO: also grab methods from superinterfaces
       for (Method method : factoryRawType.getMethods()) {
         // Skip default methods that java8 may have created.
-        if (isDefault(method) && (method.isBridge() || method.isSynthetic())) {
+        if (isDefault(method)) {
           // Even synthetic default methods need the return type validation...
           // unavoidable consequence of javac8. :-(
           validateFactoryReturnType(errors, method.getReturnType(), factoryRawType);
@@ -280,7 +280,7 @@ final class FactoryProvider2 <F> implements InvocationHandler,
               + " remove the scope annotation.",
               scope, implementation.getRawType(), factoryType);
         }
-        
+
         InjectionPoint ctorInjectionPoint;
         try {
           ctorInjectionPoint =
@@ -402,7 +402,7 @@ final class FactoryProvider2 <F> implements InvocationHandler,
     }
     return ImmutableSet.copyOf(combinedDeps);
   }
-  
+
   public Key<F> getKey() {
     return factoryKey;
   }
@@ -788,7 +788,7 @@ final class FactoryProvider2 <F> implements InvocationHandler,
   @Override public String toString() {
     return factory.getClass().getInterfaces()[0].getName();
   }
-  
+
   @Override
   public int hashCode() {
     return Objects.hashCode(factoryKey, collector);
@@ -833,7 +833,7 @@ final class FactoryProvider2 <F> implements InvocationHandler,
         | Modifier.STATIC /* package */
         | Modifier.PUBLIC
         | Modifier.PROTECTED;
-    
+
     static final Method unreflectSpecial;
     static final Method bindTo;
     static final Method invokeWithArguments;
